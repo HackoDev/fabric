@@ -31,7 +31,7 @@ type validateIdentityOUsFuncType func(id *identity) error
 // satisfiesPrincipalInternalFuncType is the prototype of the function to check if principals are satisfied
 type satisfiesPrincipalInternalFuncType func(id Identity, principal *m.MSPPrincipal) error
 
-//setupAdminInternalFuncType is a prototype of the function to setup the admins
+// setupAdminInternalFuncType is a prototype of the function to setup the admins
 type setupAdminInternalFuncType func(conf *m.FabricMSPConfig) error
 
 // This is an instantiation of an MSP that
@@ -700,6 +700,9 @@ func (msp *bccspmsp) getUniqueValidationChain(cert *x509.Certificate, opts x509.
 	if msp.opts == nil {
 		return nil, errors.New("the supplied identity has no verify options")
 	}
+
+	fmt.Println(fmt.Sprintf("Certificate metadata: %s. %s", opts.CurrentTime, cert.Issuer.CommonName))
+
 	validationChains, err := cert.Verify(opts)
 	if err != nil {
 		return nil, errors.WithMessage(err, "the supplied identity is not valid")
