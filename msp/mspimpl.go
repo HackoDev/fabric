@@ -701,12 +701,14 @@ func (msp *bccspmsp) getUniqueValidationChain(cert *x509.Certificate, opts x509.
 		return nil, errors.New("the supplied identity has no verify options")
 	}
 
-	fmt.Println(fmt.Sprintf("Certificate metadata: %s. %s", opts.CurrentTime, cert.Issuer.CommonName))
+	fmt.Println(fmt.Sprintf("Certificate metadata: %s. %s. NotBefore: %s. NotAfter: %s.", opts.CurrentTime, cert.Issuer.CommonName, cert.NotBefore, cert.NotAfter))
 
+	fmt.Println(fmt.Sprintf("Before verification"))
 	validationChains, err := cert.Verify(opts)
 	if err != nil {
 		return nil, errors.WithMessage(err, "the supplied identity is not valid")
 	}
+	fmt.Println(fmt.Sprintf("After verification"))
 
 	// we only support a single validation chain;
 	// if there's more than one then there might
