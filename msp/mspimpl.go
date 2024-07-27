@@ -13,6 +13,7 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
+	"time"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric/bccsp"
@@ -702,6 +703,12 @@ func (msp *bccspmsp) getUniqueValidationChain(cert *x509.Certificate, opts x509.
 	}
 
 	fmt.Println(fmt.Sprintf("Certificate metadata: %s. %s. NotBefore: %s. NotAfter: %s.", opts.CurrentTime, cert.Issuer.CommonName, cert.NotBefore, cert.NotAfter))
+
+	if opts.CurrentTime.IsZero() {
+		fmt.Println(fmt.Sprintf("Is Zero (before): %s. %s", opts.CurrentTime.IsZero(), opts.CurrentTime))
+		opts.CurrentTime = cert.NotBefore.Add(time.Second)
+		fmt.Println(fmt.Sprintf("Is Zero (after): %s. %s", opts.CurrentTime.IsZero(), opts.CurrentTime))
+	}
 
 	fmt.Println(fmt.Sprintf("Before verification"))
 	validationChains, err := cert.Verify(opts)
